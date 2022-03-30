@@ -4,6 +4,7 @@ import turtle
 
 RADIUS = 270
 ARROWHEAD_LENGTH = 50
+HEADING_INCREMENTS = 5
 
 
 class Angle:
@@ -15,6 +16,9 @@ class Angle:
         self.reset()
 
     def reset(self, *args) -> None:
+        """
+        Clear screen and reset turtle, draw arrow at the same time.
+        """
         self.angle = random_angle()
         with Unbind(self.show_answer):
             with Origin():
@@ -23,10 +27,16 @@ class Angle:
             self.draw_arrow()
 
     def goto_edge(self) -> None:
+        """
+        Move turtle to edge of circle.
+        """
         turtle.setheading(self.angle)
         turtle.forward(RADIUS)
 
     def draw_arrow(self, *args) -> None:
+        """
+        Draw the arrow.
+        """
         with Unbind(self.show_answer):
             with Origin():
                 self.goto_edge()
@@ -38,6 +48,9 @@ class Angle:
                     turtle.forward(ARROWHEAD_LENGTH)
 
     def show_answer(self, *args) -> None:
+        """
+        Display the current heading in degrees.
+        """
         with Unbind(self.reset):
             with Origin():
                 with PenUp():
@@ -46,6 +59,9 @@ class Angle:
                 turtle.write(msg, align="left", font=("Arial", 14, "normal"))
 
     def draw_circle(self) -> None:
+        """
+        Draw the enclosing circle.
+        """
         with Origin():
             with PenUp():
                 turtle.forward(RADIUS)
@@ -54,10 +70,17 @@ class Angle:
 
 
 def random_angle() -> int:
-    return random.randrange(10, 360, step=5)
+    """
+    Generates a random angle between 10
+    :return: number between HEADING_INCREMENTS and 360
+    """
+    return random.randrange(HEADING_INCREMENTS, 360, step=HEADING_INCREMENTS)
 
 
 class Origin:
+    """
+    Context manager for enforcing centering of turtle.
+    """
     def __init__(self):
         self.x, self.y = turtle.position()
         self.heading = turtle.heading()
@@ -75,6 +98,10 @@ class Origin:
 
 
 class PenUp:
+    """
+    Context manager for automating turtle.penup() and turtle.pendown()
+    during movement.
+    """
     def __enter__(self):
         turtle.penup()
         return self
@@ -84,6 +111,10 @@ class PenUp:
 
 
 class Unbind:
+    """
+    Context manager for unbinding and rebinding to prevent inputs
+    during drawing.
+    """
     def __init__(self, func):
         self.func = func
 
@@ -94,10 +125,10 @@ class Unbind:
         turtle.onscreenclick(self.func)
 
 
-def test_ui():
-    a = Angle()
+def main():
+    Angle()
     turtle.mainloop()
 
 
 if __name__ == "__main__":
-    test_ui()
+    main()
